@@ -29,6 +29,7 @@ private:
 
   std::vector<CACell> allCells;
   std::vector<CACellStatus> allStatus;
+  // Added by Weifeng
 
   std::vector<unsigned int> theRootCells;
   std::vector<std::vector<CACell*> > theNtuplets;

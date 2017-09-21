@@ -64,7 +64,19 @@ void CellularAutomaton::createAndConnectCells(const std::vector<const HitDoublet
 							doubletLayerPairId->innerHitId(i),
 							doubletLayerPairId->outerHitId(i));
 				  
-										  
+					int doubletOuterHitId = doubletLayerPairId->outerHitId(i);
+          bool isCurrentCellDuplicate = false;
+          for (auto cId : currentOuterLayerRef.isOuterHitOfCell[doubletOuterHitId]) {
+            if (allCells[cellId].checkCellDuplicate(allCells[cId], 0.001, 0.001) == true) {
+              isCurrentCellDuplicate = true;
+              break;
+            }
+          }
+          if (isCurrentCellDuplicate == true) {
+            cellId++;
+            continue;
+          }
+
 				  currentOuterLayerRef.isOuterHitOfCell[doubletLayerPairId->outerHitId(i)].push_back(cellId);
 														     
 				  cellId++;
@@ -78,7 +90,8 @@ void CellularAutomaton::createAndConnectCells(const std::vector<const HitDoublet
 				  
 
 				}
-				assert(cellId==currentLayerPairRef.theFoundCells[1]);
+
+
 				for (auto outerLayerPair : currentOuterLayerRef.theOuterLayerPairs)
 				{
 					LayerPairsToVisit.push(outerLayerPair);
@@ -170,6 +183,7 @@ void CellularAutomaton::findNtuplets(
 void CellularAutomaton::findTriplets(const std::vector<const HitDoublets*>& hitDoublets,std::vector<CACell::CAntuplet>& foundTriplets, const TrackingRegion& region,
 		const float thetaCut, const float phiCut, const float hardPtCut)
 {
+        std::cout << "nimei" << std::endl;
         int tsize=0;
         for ( auto hd :  hitDoublets) tsize+=hd->size();
         allCells.reserve(tsize);
@@ -228,6 +242,19 @@ void CellularAutomaton::findTriplets(const std::vector<const HitDoublets*>& hitD
 				  allCells.emplace_back(doubletLayerPairId, i,
 							doubletLayerPairId->innerHitId(i),
 							doubletLayerPairId->outerHitId(i));
+
+          int doubletOuterHitId = doubletLayerPairId->outerHitId(i);
+          bool isCurrentCellDuplicate = false;
+          for (auto cId : currentOuterLayerRef.isOuterHitOfCell[doubletOuterHitId]) {
+            if (allCells[cellId].checkCellDuplicate(allCells[cId], 0.001, 0.001) == true) {
+              isCurrentCellDuplicate = true;
+              break;
+            }
+          }
+          if (isCurrentCellDuplicate == true) {
+            cellId++;
+            continue;
+          }
 				  
 										  
 				  currentOuterLayerRef.isOuterHitOfCell[doubletLayerPairId->outerHitId(i)].push_back(cellId);
@@ -242,7 +269,6 @@ void CellularAutomaton::findTriplets(const std::vector<const HitDoublets*>& hitD
 									       );
 				}
 				assert(cellId==currentLayerPairRef.theFoundCells[1]);
-
 
 				for (auto outerLayerPair : currentOuterLayerRef.theOuterLayerPairs)
 				{

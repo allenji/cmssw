@@ -115,6 +115,34 @@ public:
     }
     
   }
+
+  bool checkCellDuplicate(CACell cacell, float rzthres, float xythres) {
+    float r0 = getInnerR();
+    float z0 = getInnerZ();
+    float r1 = getOuterR();
+    float z1 = getOuterZ();
+    float r2 = cacell.getInnerR();
+    float z2 = cacell.getInnerZ();
+    float a = fabs(z0*(r1-r2) + z1*(r2-r0) + z2*(r0-r1));
+    float distance_10_squared = (r0-r1) * (r0-r1) + (z0-z1) * (z0-z1);
+    float distance_12_squared = (r1-r2) * (r1-r2) + (z1-z2) * (z1-z2);
+    float deltaThetaRZ = 2 * a / sqrt(distance_10_squared*distance_12_squared);
+
+    float x0 = getInnerX();
+    float y0 = getInnerY();
+    float x1 = getOuterX();
+    float y1 = getOuterY();
+    float x2 = cacell.getInnerX();
+    float y2 = cacell.getInnerY();
+    float a_xy = fabs(y0*(x1-x2) + y1*(x2-x0) + y2*(x0-x1));
+    float distance_10_squared_xy = (x0-x1) * (x0-x1) + (y0-y1) * (y0-y1);
+    float distance_12_squared_xy = (x1-x2) * (x1-x2) + (y1-y2) * (y1-y2);
+    float deltaPhiXY = 2 * a_xy / sqrt(distance_10_squared_xy * distance_12_squared_xy); 
+    
+    if ((deltaPhiXY < xythres) && (deltaThetaRZ < rzthres)) return true;
+    else return false;
+  }
+
   
 
   void checkAlignmentAndAct(CAColl& allCells, CAntuple & innerCells, const float ptmin, const float region_origin_x,
@@ -283,7 +311,7 @@ public:
       }
     
   }
-  
+
   
 private:
   
