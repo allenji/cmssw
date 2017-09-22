@@ -64,7 +64,18 @@ void CellularAutomaton::createAndConnectCells(const std::vector<const HitDoublet
 							doubletLayerPairId->innerHitId(i),
 							doubletLayerPairId->outerHitId(i));
 				  
-										  
+          int doubletOuterHitId = doubletLayerPairId->outerHitId(i);
+          bool isCurrentCellDuplicate = false;
+          for (auto cId : currentOuterLayerRef.isOuterHitOfCell[doubletOuterHitId]) {
+            if (allCells[cellId].checkCellDuplicate(allCells[cId], 0.001, 0.001) == true) {
+              isCurrentCellDuplicate = true;
+              break;
+            }
+          }
+          if (isCurrentCellDuplicate == true) {
+            cellId++;
+            continue;
+          }										  
 				  currentOuterLayerRef.isOuterHitOfCell[doubletLayerPairId->outerHitId(i)].push_back(cellId);
 														     
 				  cellId++;
@@ -229,6 +240,18 @@ void CellularAutomaton::findTriplets(const std::vector<const HitDoublets*>& hitD
 							doubletLayerPairId->innerHitId(i),
 							doubletLayerPairId->outerHitId(i));
 				  
+          int doubletOuterHitId = doubletLayerPairId->outerHitId(i);
+          bool isCurrentCellDuplicate = false;
+          for (auto cId : currentOuterLayerRef.isOuterHitOfCell[doubletOuterHitId]) {
+            if (allCells[cellId].checkCellDuplicate(allCells[cId], 0.001, 0.001) == true) {
+              isCurrentCellDuplicate = true;
+              break;
+            }
+          }
+          if (isCurrentCellDuplicate == true) {
+            cellId++;
+            continue;
+          }
 										  
 				  currentOuterLayerRef.isOuterHitOfCell[doubletLayerPairId->outerHitId(i)].push_back(cellId);
 														     
